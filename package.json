@@ -1,0 +1,23 @@
+{
+  "name": "visjs_classificator",
+  "version": "1.0.0",
+  "description": "Visual classification of pictures",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vincent-CIRCL/visjs_classificator.git"
+  },
+  "author": "Vincent F.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vincent-CIRCL/visjs_classificator/issues"
+  },
+  "homepage": "https://github.com/Vincent-CIRCL/visjs_classificator#readme",
+  "dependencies": {
+    "express": "^4.15.2",
+    "socket.io": "^2.2.0"
+  }
+}
