@@ -9,14 +9,14 @@ var sharp = require('sharp');
 var vis = require('visjs-network');
 var input_folder = '/input_pictures/';
 var input_folder_reduced = '/input_pictures_reduced/';
-var do_resize = false
+var do_resize = true
 var target_width = 500
 
 // Gives access to the public folder
 app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/node_modules/visjs-network/dist/'));
 
-if(true){
+if(do_resize){
     app.use(express.static(__dirname + input_folder_reduced));
 } else {
     app.use(express.static(__dirname + input_folder));
