@@ -3,17 +3,24 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
 var fs = require('fs');
-// var expressThumbnail = require('express-thumbnail');
+var sharp = require('sharp');
 
 //Not sure if needed
 var vis = require('visjs-network');
 var input_folder = '/input_pictures/';
+var input_folder_reduced = '/input_pictures_reduced/';
+var do_resize = false
+var target_width = 500
 
 // Gives access to the public folder
 app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/node_modules/visjs-network/dist/'));
-app.use(express.static(__dirname + input_folder));
-// NORMAL : app.use(expressThumbnail.register(__dirname + input_folder));
+
+if(true){
+    app.use(express.static(__dirname + input_folder_reduced));
+} else {
+    app.use(express.static(__dirname + input_folder));
+}
 
 // Serve the home page of the application
 app.get('/', function(req, res){
@@ -31,6 +38,7 @@ function create_new_json(){
     //Read directory and add each file as a node
     id = 0
     fs.readdirSync(__dirname + input_folder).forEach(file => {
+
         var tmp_obj = {
             "id" : id,
             "shape" : "image", // icon
@@ -112,7 +120,24 @@ io.on('connection', function(socket){
 
 
 http.listen(3000, function(){
+
   console.log('listening on *:3000');
+
+  // https://sharp.dimens.io/en/stable/api-resize/
+  if(do_resize){
+      console.log('Reducing image size ... ');
+      fs.readdirSync(__dirname + input_folder).forEach(file => {
+            //Resize
+            sharp(__dirname + input_folder + file).resize(target_width,null).flatten().
+                toFile(__dirname + input_folder_reduced + file, function(err){
+                if(err){
+                    console.log("Error at reducing size")
+                    console.log(err)
+                    return;
+                }
+            })
+    })
+  }
 });
 
 // Socket.io cheatsheet : https://socket.io/docs/emit-cheatsheet/

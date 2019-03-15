@@ -49,6 +49,7 @@ function launch_client() {
 
 function init_connection(){
   socket = io();
+
   socket.on('answer_json', function(parsed_content) {
         console.log(parsed_content)
         // Store it
@@ -58,17 +59,21 @@ function init_connection(){
 
   socket.on('add_edge', function(message) {
         console.log(message)
-        data.edges.add([{from: message.from, to: message.to}])
+        data.edges.add([{id: message.id, from: message.from, to: message.to}])
     });
 
   socket.on('rem_edge', function(message) {
         console.log(message)
-        data.edges.remove([{id: message.id}])
+        console.log(data)
+        console.log(data.edges)
+        console.log(data.edges._data)
+        data.edges.remove(message.id)
     });
 }
 
 function load_new_json(){
     socket.emit('ask_json', 'new');
+    document.getElementById('text').innerHTML = 'Waiting for server'
 }
 
 function load_json(){
@@ -365,7 +370,7 @@ function draw(){
 
     document.getElementById('bar').style.width = width + 'px'
     document.getElementById('text').innerHTML =
-      Math.round(widthFactor * 100) + '% - Please wait'
+      Math.round(widthFactor * 100) + '%'
   })
   network.once('stabilizationIterationsDone', function() {
     document.getElementById('text').innerHTML = '100%'
