@@ -313,10 +313,11 @@ function draw(){
         },
         barnesHut: {
             gravitationalConstant: -2000,
-            springConstant: 0.0001,
+            springConstant: 0.2,
             springLength: 200
         }
     },
+    interaction: { multiselect: true},
     layout: {
         improvedLayout: false
     }, configure: {
