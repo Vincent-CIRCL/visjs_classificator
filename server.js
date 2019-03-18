@@ -13,6 +13,7 @@ var do_resize = true
 var target_width = 500
 
 var first_load = true
+var json_graph;
 
 // Gives access to the public folder
 app.use(express.static(__dirname + '/public'))
@@ -33,23 +34,29 @@ app.get('/', function(req, res){
 process.argv.forEach(function (val, index, array) {
   console.log(index + ': ' + val);
   if(index===2 && val !== ""){
-    file_path = __dirname + val
-    console.log(file_path)
+    file_path = __dirname + "/" + val
 
+    load_file(file_path)
+  }
+
+});
+
+function load_file(file_path){
     try {
       if (fs.existsSync(file_path)) {
         //file exists
-        load(file_path)
+        console.log("File to load provided : " + file_path + "\nLoading ... ")
+
+        json_graph = JSON.parse(fs.readFileSync(file_path, 'utf8'));
+
+        console.log(json_graph)
         first_load = false
       }
     } catch(err) {
       console.error(err)
     }
 
-  }
-
-});
-
+}
 
 function create_new_json(){
     //Construct a basic object
@@ -74,16 +81,6 @@ function create_new_json(){
     return o
 }
 
-function load_json(){
-    fs.readFile(__dirname + '/public' + '/content.json', function (err, data) {
-     if (data) {
-        console.log("Read JSON file: " + data);
-        // data = data.trim();
-         //or data = JSON.parse(JSON.stringify(data.trim()));
-        storage = JSON.parse(data);
-        return storage
-    }});
-}
 
 // Sucessful connexion of a user
 io.on('connection', function(socket){

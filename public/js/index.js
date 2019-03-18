@@ -360,7 +360,7 @@ function draw(){
   });
   network.on("doubleClick", function (params) {
     params.nodes.forEach(function(nodeId) {
-        if(nodes_distri.get(nodeId).was_fixed === true){
+        if(nodes_distri.get(nodeId).is_fixed === true){
             nodes_distri.update({id: nodeId, fixed: {x: false, y: false}, is_fixed : false});
         } else {
             nodes_distri.update({id: nodeId, fixed: {x: true, y: true}, is_fixed : true});
@@ -406,8 +406,6 @@ function draw(){
 
 				case 77: // m
 					var selected_id = network.getSelectedNodes();
-
-					console.log(selected_id)
                     do_complete_graph(selected_id)
 					break;
 

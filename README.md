@@ -13,6 +13,9 @@ Note : GIF performance is not representative of real time performance.
 or 
 > ./launch_server.sh 
 
+If you want to load a previously saved json file : 
+> nodejs server.js <nameOfYourFile>.json 
+
 ### Launch (dev)
 
 if you have nodemon or want to develop the tool : 
@@ -25,7 +28,7 @@ CTRL + clic to select more than one node at a time.
 After a selection of multiple node, press "M" to create a complete graphe.
 ![CompleteGraphe](./doc/pictures/completegraphe.gif)
 
-Double-clic on a node to make it "fixed" on the screen (your screen only)
+Double-clic on a node to make it "fixed" on the screen (your screen only). Perform again to un-fix a node.
 ![fixednode](./doc/pictures/fixednode.gif)fixednode
 
 ### Todo list 
