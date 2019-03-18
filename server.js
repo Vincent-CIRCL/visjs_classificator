@@ -12,6 +12,8 @@ var input_folder_reduced = '/input_pictures_reduced/';
 var do_resize = true
 var target_width = 500
 
+var first_load = true
+
 // Gives access to the public folder
 app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/node_modules/visjs-network/dist/'));
@@ -27,7 +29,27 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
 
-var first_load = true
+// print process.argv
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
+  if(index===2 && val !== ""){
+    file_path = __dirname + val
+    console.log(file_path)
+
+    try {
+      if (fs.existsSync(file_path)) {
+        //file exists
+        load(file_path)
+        first_load = false
+      }
+    } catch(err) {
+      console.error(err)
+    }
+
+  }
+
+});
+
 
 function create_new_json(){
     //Construct a basic object
@@ -69,15 +91,13 @@ io.on('connection', function(socket){
 
   socket.on('ask_json', function(message) {
     console.log('message : ' + message);
-    if(message == "new"){
-        // On first load, we parse the folder
-        if(first_load){
-            json_graph = create_new_json()
-            first_load = false
-        }
-    } else {
 
+    if(message == "new" && first_load){
+        // On first load, we parse the folder
+        json_graph = create_new_json()
+        first_load = false
     }
+
     //io.emit('answer_json',answer) / Broadcast, not for mulituser !
     socket.emit('answer_json', json_graph);
   });
@@ -138,6 +158,8 @@ http.listen(3000, function(){
             })
     })
   }
+
+
 });
 
 // Socket.io cheatsheet : https://socket.io/docs/emit-cheatsheet/

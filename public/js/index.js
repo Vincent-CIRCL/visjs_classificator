@@ -313,11 +313,13 @@ function draw(){
         },
         barnesHut: {
             gravitationalConstant: -2000,
-            springConstant: 0.2,
-            springLength: 200
+            springConstant: 0.01,// 0.2,
+            springLength: 45 // 200
         }
     },
-    interaction: { multiselect: true},
+    interaction: {
+        multiselect: true
+    },
     layout: {
         improvedLayout: false
     }, configure: {
@@ -350,13 +352,19 @@ function draw(){
     });
   });
   network.on("dragEnd", function (params) {
-    //params.nodes.forEach(function(nodeId) {
-    //    nodes_distri.update({id: nodeId, fixed: {x: true, y: true}});
-    //});
+    params.nodes.forEach(function(nodeId) {
+        if(nodes_distri.get(nodeId).is_fixed === true){
+            nodes_distri.update({id: nodeId, fixed: {x: true, y: true}});
+        }
+    });
   });
   network.on("doubleClick", function (params) {
     params.nodes.forEach(function(nodeId) {
-        nodes_distri.update({id: nodeId, fixed: {x: true, y: true}});
+        if(nodes_distri.get(nodeId).was_fixed === true){
+            nodes_distri.update({id: nodeId, fixed: {x: false, y: false}, is_fixed : false});
+        } else {
+            nodes_distri.update({id: nodeId, fixed: {x: true, y: true}, is_fixed : true});
+        }
     });
   });
 
@@ -383,6 +391,32 @@ function draw(){
     }, 500)
   })
 
+
+  // ============== -------------- =======================
+  // Add listener on keyboard, on the full page
+  $(document).on("keydown", function(evt) {
+			if (evt.target !== undefined && $(evt.target).is('input')) {
+				console.log("Strange key pressed catched")
+				return;
+			}
+
+			console.log("Key pressed : " + evt.keyCode)
+
+			switch(evt.keyCode) {
+
+				case 77: // m
+					var selected_id = network.getSelectedNodes();
+
+					console.log(selected_id)
+                    do_complete_graph(selected_id)
+					break;
+
+				default:
+					break;
+			}
+		});
+
+
   /*
   network.on('doubleClick', function(params) {
     nodes_distri.forEach(nodes, function(item) {
@@ -402,6 +436,65 @@ function draw(){
   });
     */
 
+
+}
+
+function get_edge_between_nodes(node1,node2) {
+
+    var tmp_edge_list = network.getConnectedEdges(node1)
+    //console.log("Edge between nodes : " + node1 + " and " + node2)
+    //console.log(tmp_edge_list)
+
+    var tmp_table = []
+    for(i =0 ; i < tmp_edge_list.length ; i ++){
+
+        var tmp_edge = data.edges.get(tmp_edge_list[i])
+
+        if(tmp_edge.to === node2){ // Node1 already verified by construction
+            tmp_table.push(tmp_edge)
+        }
+    }
+
+    //console.log("tmp_table")
+    //console.log(tmp_table)
+    return tmp_table
+
+    // too complex
+    // return data.edges.get().filter(function (edge) {
+    //    return (edge.from === node1 && edge.to === node2 )|| (edge.from === node2 && edge.to === node1);
+    //});
+};
+
+function do_complete_graph(node_list){
+
+    for(var i = 0; i < node_list.length; i++) {
+        for(var j = 0; j < node_list.length; j++) {
+
+            // Get nodes id
+            var id_from = node_list[i]
+            var id_to = node_list[j]
+            //console.log(id_from, id_to)
+
+            // If not itself and no link between both nodes, we create one
+            if(id_from !== id_to && get_edge_between_nodes(id_from, id_to).length == 0){
+                // Locally add edge
+                var tmp_id = data.edges.add([{from: id_from, to: id_to}])[0]
+
+                //console.log(tmp_id)
+                //console.log(data.edges.get(tmp_id))
+
+                // Notify about the adding
+                new_edge_notify(data.edges.get(tmp_id))
+            }
+
+            //console.log("Edge between nodes result : ")
+            //console.log(get_edge_between_nodes(id_from, id_to))
+
+            // Else do nothing
+
+
+        }
+    }
 
 }
 
