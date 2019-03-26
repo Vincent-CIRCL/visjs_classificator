@@ -154,6 +154,8 @@ http.listen(3000, function(){
                 }
             })
     })
+    console.log('Image reduction completed.');
+
   }
 
 

@@ -29,13 +29,20 @@ After a selection of multiple node, press "M" to create a complete graphe.
 ![CompleteGraphe](./doc/pictures/completegraphe.gif)
 
 Double-clic on a node to make it "fixed" on the screen (your screen only). Perform again to un-fix a node.
-![fixednode](./doc/pictures/fixednode.gif)fixednode
+![fixednode](./doc/pictures/fixednode.gif)
+
+### Performance
+Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
 
 ### Todo list 
-- Rectangle selection
-- When double clicqued and moved, the node stays where it is (fixed property isk kept on dragging)
+- Rectangle selection : Clic + CTRL Done, rectangle would still need to be done. See following picture on the idea on how-to-do : 
+![explanations](./doc/pictures/schema.jpg)
+- When double clic and moved, the node stays where it is (fixed property isk kept on dragging) : Done
 - Simple and double arrows support
-- Order on a grid
+- Order on a grid (See Mokkadev repository)
+- Selection rectangle
+- Increase link size
+- Show one or many links between pictures
 
 Good links to get started if you're lost : 
 > https://medium.com/jeremy-keeshin/hello-world-for-javascript-with-npm-modules-in-the-browser-6020f82d1072 
