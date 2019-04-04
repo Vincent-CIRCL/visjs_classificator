@@ -49,6 +49,27 @@ function load_file(file_path){
 
         json_graph = JSON.parse(fs.readFileSync(file_path, 'utf8'));
 
+        // Loading nodes for modification (BMP..)
+        o = json_graph["nodes"]
+        // DEBUG // console.log("LOADED NODES : ")
+        // DEBUG // console.log(o)
+        o.forEach(tmp_obj => {
+            file = tmp_obj["image"]
+
+            // .BMP handling
+            extension = file.split('.').pop();
+            if(extension === "bmp"){
+                file = file.substr(0, file.lastIndexOf(".")) + ".png";
+            }
+
+            tmp_obj["image"] = file
+        });
+
+        // DEBUG // console.log(o)
+
+        json_graph["nodes"] = o
+
+        console.log("LOADED FINAL JSON (after BMP conversion if needed) : ")
         console.log(json_graph)
         first_load = false
       }
@@ -67,7 +88,6 @@ function create_new_json(){
     //Read directory and add each file as a node
     id = 0
     fs.readdirSync(__dirname + input_folder).forEach(file => {
-
         var tmp_obj = {
             "id" : id,
             "shape" : "image", // icon
