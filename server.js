@@ -1,25 +1,44 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var express = require('express');
-var fs = require('fs');
-var sharp = require('sharp');
+const express = require('express');
+const fs = require('fs');
+const sharp = require('sharp');
+const commander = require('commander');
 
 //Not sure if needed
-var vis = require('visjs-network');
-var input_folder = '/input_pictures/';
-var input_folder_reduced = '/input_pictures_reduced/';
-var do_resize = true
+const vis = require('visjs-network');
+
 var target_width = 500
 
 var first_load = true
 var json_graph;
 
+// Handle arguments
+commander
+  .version('1.0.0', '-v, --version')
+  .usage('[OPTIONS]...')
+  .option('-i, --input-folder [path]', 'Input pictures folders - <curr_directory>/input_pictures/ by default')
+  .option('-j, --input-json [path]', 'Input json to display. IF none provided, json will be created.')
+  .option('-r, --resize', 'Do resize pictures before serving')
+  .option('-o, --output-folder [path]', 'Folder to output reduced size pictures - <curr_directory>/input_pictures_reduced/ by default')
+  .parse(process.argv);
+//See : https://github.com/tj/commander.js/
+
 // Gives access to the public folder
 app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/node_modules/visjs-network/dist/'));
 
+// Resize if needed
+var do_resize = commander.resize
+var input_folder = commander.inputFolder ? commander.inputFolder : '/input_pictures/';
+var input_folder_reduced = commander.outputFolder ? commander.outputFolder : '/input_pictures_reduced/';
 if(do_resize){
+    // Create output folder if needed
+    if (!fs.existsSync(__dirname +input_folder_reduced)){
+        fs.mkdirSync(__dirname +input_folder_reduced);
+    }
+
     app.use(express.static(__dirname + input_folder_reduced));
 } else {
     app.use(express.static(__dirname + input_folder));
@@ -30,17 +49,13 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
 
-// print process.argv
-process.argv.forEach(function (val, index, array) {
-  console.log(index + ': ' + val);
-  if(index===2 && val !== ""){
-    file_path = __dirname + "/" + val
+// Handle json load
+if(commander.inputJson){
+    json_path = __dirname + "/" + commander.inputJson
+    load_file(json_path)
+}
 
-    load_file(file_path)
-  }
-
-});
-
+// JSON load
 function load_file(file_path){
     try {
       if (fs.existsSync(file_path)) {
@@ -76,9 +91,9 @@ function load_file(file_path){
     } catch(err) {
       console.error(err)
     }
-
 }
 
+// JSON creation
 function create_new_json(){
     //Construct a basic object
     var o = {}

@@ -394,6 +394,7 @@ function draw(){
 
   // ============== -------------- =======================
   // Add listener on keyboard, on the full page
+  // TODO : bug when M after downloading json
   $(document).on("keydown", function(evt) {
 			if (evt.target !== undefined && $(evt.target).is('input')) {
 				console.log("Strange key pressed catched")
