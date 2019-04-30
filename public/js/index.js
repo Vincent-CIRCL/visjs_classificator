@@ -20,6 +20,7 @@ function launch_client() {
 
     // Ask for a new json from the input file
     request_json(socket)
+
 }
 
 
@@ -27,10 +28,10 @@ function launch_client() {
 
 var nodes_distri
 var edges_distri
-
+var container
 function draw(){
   // create a network
-  var container = document.getElementById('mynetwork')
+  container = document.getElementById('mynetwork')
   exportArea = document.getElementById('input_output')
 
   nodes_distri = new vis.DataSet(incoming_network["nodes"]);
@@ -120,8 +121,8 @@ function draw(){
   network.on("dragEnd", function (params) { dragStart(params) });
   network.on("doubleClick", function (params) { dragStart(params) });
 
-   //======================= ------------------------- =======================
-   // Handling loader bar
+  // ============== -------------- =======================
+  // Handling loader bar
 
   network.on('stabilizationProgress', function(params) { stabilizationProgress(params) });
   network.once('stabilizationIterationsDone', function() { stabilizationIterationsDone() });
@@ -129,7 +130,17 @@ function draw(){
   // ============== -------------- =======================
   // Add listener on keyboard, on the full page
   $(document).on("keydown", function(evt) {handle_key_pressed(evt)});
+
+  // ============== -------------- =======================
+  // Add a listener to open the options with a button
+  document.getElementById('options_collapse').addEventListener("click", function() {event_collapse_listener(document.getElementById('config'))})
+  // Handle selection rectangle
+  makeMeMultiSelect(container, network, nodes_distri);
+
 }
+
+
+
 
 /* ///////////////// COMMANDS \\\\\\\\\\\\\\\\\
 RIGHT CLIC (on node) = Move node (and won't fix his position)
@@ -137,6 +148,8 @@ RIGHT CLIC (on background) = Move view
 LEFT CLIC (on node) = Add edge
 Double CLIC (on node) = Fix position of the node
 */
+
+
 
 
 
@@ -170,8 +183,6 @@ network.on("click", function(e) {
     toggle = !toggle;
 
 */
-
-
 
   /*
   network.on('doubleClick', function(params) {

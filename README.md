@@ -31,6 +31,9 @@ After a selection of multiple node, press "M" to create a complete graphe.
 Double-clic on a node to make it "fixed" on the screen (your screen only). Perform again to un-fix a node.
 ![fixednode](./doc/pictures/fixednode.gif)
 
+Right-clic + drag to draw a selection rectangle
+![selectionRectangle](./doc/pictures/selection_rectangle.gif)
+
 ### Performance
 Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
 

@@ -20,6 +20,8 @@
   <script src='./js/graph_lib.js' type='text/javascript'></script>
   <script src='./js/notify_lib.js' type='text/javascript'></script>
   <script src='./js/local_canvas_lib.js' type='text/javascript'></script>
+  <script src='./js/rectangle_select.js' type='text/javascript'></script>
+  <script src='./js/css_helper.js' type='text/javascript'></script>
 
 </head>
 <body onload='launch_client()'>
@@ -38,9 +40,9 @@
 
   </div>
 
- <input type="button" id="download_button" onclick="export_json()" value="download"></input>
- <button class="collapsible">Open Collapsible</button>
-    <div class="content" id='config'></div>
+ <button class="collapsible" id="download_button" onclick="export_json()" value="download">Download</button>
+ <button class="collapsible" id ="options_collapse">Options</button>
+    <div class="content" id='config' ></div>
 
 
 </body>
