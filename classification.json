@@ -1,0 +1,61 @@
+{
+  "nodes": [
+    {
+      "id": 0,
+      "shape": "image",
+      "image": "www.haustechnik-saar.de.png",
+    },
+    {
+      "id": 1,
+      "shape": "image",
+      "image": "www.force-xloot.ml.png",
+    },
+    {
+      "id": 2,
+      "shape": "image",
+      "image": "www.miamipooltech.com.png",
+    },
+    {
+      "id": 42, //Generated or defined id
+      "shape": "icon", // Size of the picture
+      "image": "", // The picture to show in the box
+      "group" : "anchor", //Group to which the node belongs to
+      "fixed": true, //Fixed position
+    }
+  ],
+  "edges": [
+    {
+      "from": 0, //Source node
+      "to": 58, //Target node
+      "label": "r0: 0.0", // Shown label (all the time)
+      "title": 0.0, //Shown value when clicked = distance value = confidence TODO : To round
+      "value": "20.0", //Size of the arrow
+
+      "type" : "anchor", //Categorization between a node and an anchor
+
+      "dashes" : true, // Draw the edge with dashes
+      "algo" : "myWonderfulAlgo", //The source algorithm that generated this link
+      "color": "#ffffff" // generated or attributed color
+    },
+    {
+      "from": 1, //Source node
+      "to": 195, //Target node
+      "label": "r0: 0.0", // Shown label (all the time)
+      "title": 0.0, //Shown value when clicked = distance value = confidence TODO : To round
+      "value": "20.0", //Size of the arrow
+
+      "type" : "link", // Distance between pictures
+
+      "dashes" : true, // Draw the edge with dashes
+      "algo" : "myWonderfulAlgo", //The source algorithm that generated this link
+      "color": "#ffffff"
+    },
+    {
+      "from": 3,
+      "to": 87,
+      "label": "rank 0 (0.05206)",
+      "value": "19.01084624006184",
+      "title": 0.05206072420727148
+    }
+  ]
+}
