@@ -24,6 +24,7 @@ function selectFromDOMRect(){
         (selected, { id }) => {
             const { x, y } = network.getPositions(id)[id];
             return (startX <= x && x <= endX && startY <= y && y <= endY) ? selected.concat(id) : selected;
+            //And nodes.get(id).hidden ? Depending on the behavior expected
         }, []
     ));
 }

@@ -26,9 +26,10 @@ function launch_client() {
 
 // ======================= ------------------- =======================
 
-var nodes_distri
-var edges_distri
-var container
+var nodes_distri    // Nodes to be displayed on the network
+var edges_distri    // Edges to be displayed on the network
+var container       // The network container
+
 function draw(){
   // create a network
   container = document.getElementById('mynetwork')
@@ -63,17 +64,21 @@ function draw(){
     edges: {
       color: 'lightgray'
     },
+    groups: {
+      "anchor": { color: 'red', mass: 1 },// try to change this value
+    },
     manipulation: {
           // http://visjs.org/docs/data/dataset.html#Data_Manipulation
           enabled: true,
           addNode: function (data, callback) { add_node(data, callback) },
-          editNode: function (data, callback) { edit_node(data, callback) },
           addEdge: function (data, callback) { add_edge(data, callback) },
           editEdge: {
             editWithoutDrag:
                 function(data, callback) { edit_edge(data, callback) }
           },
-          deleteEdge: function (data, callback) { rem_edge(data, callback) }
+          deleteEdge: function (data, callback) { rem_edge(data, callback) },
+          deleteNode: false,
+          //editNode: false
      },
     physics: {
         adaptiveTimestep: true,
@@ -118,29 +123,25 @@ function draw(){
   network = new vis.Network(container, data, options)
 
   network.on("dragStart", function (params) { dragStart(params) });
-  network.on("dragEnd", function (params) { dragStart(params) });
-  network.on("doubleClick", function (params) { dragStart(params) });
+  network.on("dragEnd", function (params) { dragEnd(params) });
+  network.on("doubleClick", function (params) { doubleClick(params) });
 
   // ============== -------------- =======================
   // Handling loader bar
-
   network.on('stabilizationProgress', function(params) { stabilizationProgress(params) });
   network.once('stabilizationIterationsDone', function() { stabilizationIterationsDone() });
 
   // ============== -------------- =======================
   // Add listener on keyboard, on the full page
-  $(document).on("keydown", function(evt) {handle_key_pressed(evt)});
+  $(document).on("keydown", function(evt) { handle_key_pressed(evt) });
 
   // ============== -------------- =======================
   // Add a listener to open the options with a button
   document.getElementById('options_collapse').addEventListener("click", function() {event_collapse_listener(document.getElementById('config'))})
   // Handle selection rectangle
   makeMeMultiSelect(container, network, nodes_distri);
-
+  make_rectangle_with_anchors(container, network, nodes_distri);
 }
-
-
-
 
 /* ///////////////// COMMANDS \\\\\\\\\\\\\\\\\
 RIGHT CLIC (on node) = Move node (and won't fix his position)
@@ -148,12 +149,6 @@ RIGHT CLIC (on background) = Move view
 LEFT CLIC (on node) = Add edge
 Double CLIC (on node) = Fix position of the node
 */
-
-
-
-
-
-
 
 // Formatting : https://stackoverflow.com/questions/40096121/is-it-possible-to-format-beautify-javascript-in-pycharm
 /*

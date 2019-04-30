@@ -6,20 +6,19 @@ function get_edge_between_nodes(node1,node2) {
 
     var tmp_edge_list = network.getConnectedEdges(node1)
     //console.log("Edge between nodes : " + node1 + " and " + node2)
-    //console.log(tmp_edge_list)
+    //console.log("Edge from", node1, tmp_edge_list)
 
     var tmp_table = []
     for(i =0 ; i < tmp_edge_list.length ; i ++){
 
         var tmp_edge = data.edges.get(tmp_edge_list[i])
-
+        console.log("List edges : ", tmp_edge)
         if(tmp_edge.to === node2){ // Node1 already verified by construction
             tmp_table.push(tmp_edge)
         }
     }
 
-    //console.log("tmp_table")
-    //console.log(tmp_table)
+    //console.log("tmp_table", tmp_table)
 
     return tmp_table
 
@@ -55,10 +54,20 @@ function do_complete_graph(node_list){
             //console.log(get_edge_between_nodes(id_from, id_to))
 
             // Else do nothing
-
-
         }
     }
+}
 
+function do_cluster(evt, selected_id){
+    // Create a new anchor node
+    anchor_id = add_anchor_node(evt)
+
+    // Link all node to the anchor
+    link_list_to_anchor(anchor_id, selected_id)
+
+    // mark all nodes as part of the anchor group ? (Mutually exclusive ? Pb ?)
+
+    // call rectangle drawer
+    // draw_boxes(ctx)
 }
 

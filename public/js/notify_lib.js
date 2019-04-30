@@ -37,7 +37,7 @@ function new_edge_notify(curr_data){
     tmp_data.to = curr_data.to
     tmp_data.from = curr_data.from
 
-    console.log(tmp_data)
+    console.log("New edge notify : ", tmp_data)
     socket.emit('add_edge', tmp_data);
 }
 
@@ -47,15 +47,23 @@ function rem_edge_notify(curr_data){
 
     //Fill the id of the removed edge to propagate
     //TODO : Not only the first one ? May many be deleted at the same time ?
-    console.log(curr_data)
     tmp_data.id = curr_data.edges[0]
 
-    console.log(tmp_data)
+    console.log("Remove edge notify : ", tmp_data)
     socket.emit('rem_edge', tmp_data);
 }
 
-function new_node_notify(data){
-    console.log("How did you managed to add a node without picture ? Oo")
+function new_node_notify(curr_data){
+    console.log(curr_data)
+
+    // Previously : console.log("How did you managed to add a node without picture ? Oo")
+    var tmp_data = {}
+    tmp_data.type = "add"
+    tmp_data.id = curr_data[0]
+
+    console.log(tmp_data)
+    console.log("New node notify : ", tmp_data)
+    socket.emit('add_node', tmp_data);
 }
 
 function rem_node_notify(data){
