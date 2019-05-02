@@ -12,7 +12,7 @@ function get_edge_between_nodes(node1,node2) {
     for(i =0 ; i < tmp_edge_list.length ; i ++){
 
         var tmp_edge = data.edges.get(tmp_edge_list[i])
-        console.log("List edges : ", tmp_edge)
+        // console.log("List edges : ", tmp_edge)
         if(tmp_edge.to === node2){ // Node1 already verified by construction
             tmp_table.push(tmp_edge)
         }

@@ -34,6 +34,9 @@ Double-clic on a node to make it "fixed" on the screen (your screen only). Perfo
 Right-clic + drag to draw a selection rectangle
 ![selectionRectangle](./doc/pictures/selection_rectangle.gif)
 
+With selection of nodes, press "c" to generate an anchor.
+![anchor](./doc/pictures/select_and_anchor.gif)
+
 ### Performance
 Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
 

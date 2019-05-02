@@ -38,7 +38,7 @@ function add_anchor_node(evt){ // data,callback
 
 
 function link_list_to_anchor(anchor, node_list){
-    console.log("ANCHOR", anchor, node_list)
+    // console.log("ANCHOR", anchor, node_list)
 
     var id_to = anchor[0]
 
@@ -56,7 +56,7 @@ function link_list_to_anchor(anchor, node_list){
                     hidden: true,
                 }
 
-            console.log("tmp_edge", tmp_edge)
+            // console.log("tmp_edge", tmp_edge)
             var tmp_id = data.edges.add([tmp_edge])
 
             // Notify about the adding
@@ -66,54 +66,65 @@ function link_list_to_anchor(anchor, node_list){
 }
 
 
-function draw_bounding_box_on_network(ctx, minX, minY, maxX, maxY){
-    console.log("DRAW ! ", minX, minY, maxX, maxY)
+function draw_bounding_box_on_network(ctx, startX, startY, endX, endY){
     // Draw a rectangle regarding the current selection
-    const [startX, startY] = canvasify(minX, minY);
-        const [endX, endY] = canvasify(maxX, maxY);
+    // const [startX, startY] = canvasify(minX, minY);
+    // const [endX, endY] = canvasify(maxX, maxY);
 
-        console.log("DRAW ! ", startX, startY, endX, endY)
+    console.log("DRAW ! ", startX, startY, endX, endY, ctx)
 
-
-        ctx.setLineDash([5]);
-        ctx.strokeStyle = 'rgba(78, 146, 237, 0.75)';
-        ctx.strokeRect(startX, startY, endX - startX, endY - startY);
-        ctx.setLineDash([]);
-        ctx.fillStyle = 'rgba(151, 194, 252, 0.45)';
-        ctx.fillRect(startX, startY, endX - startX, endY - startY);
+    ctx.setLineDash([5]);
+    ctx.strokeStyle = 'rgba(78, 146, 237, 0.75)';
+    ctx.strokeRect(startX, startY, endX - startX, endY - startY);
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(151, 194, 252, 0.45)';
+    ctx.fillRect(startX, startY, endX - startX, endY - startY);
+    console.log("Rectangle drawn")
 
 }
+
+NODE_SIZE = 60
 
 function get_list_boxes(){
     list_coords = []
     node_id_list = data.nodes.getIds()
     var positions = network.getPositions();
-    console.log(positions)
+    // console.log(positions)
 
     // For all anchors
     for(var i = 0; i < anchor_list.length; i++) {
-         min_X = 10000
-         min_Y = 10000
-         max_X = 0
-         max_Y = 0
+         var min_X = null
+         var min_Y = null
+         var max_X = null
+         var max_Y = null
 
         // For all nodes that could be links to the anchor
         for(var j = 0; j < node_id_list.length; j++) {
             //console.log("CHECK : ", nodes_distri._data[j].id, anchor_list[i][0])
-            common_edges = get_edge_between_nodes(anchor_list[i][0], node_id_list[j])
+            common_edges = get_edge_between_nodes( node_id_list[j], anchor_list[i][0])
+
 
             // If the current node is link to the anchor
-            if(common_edges.length !== 0){
+            if(common_edges.length !== 0 && anchor_list[i][0] !== node_id_list[j]){
+                console.log("List edges from ", anchor_list[i][0], " to ",  node_id_list[j], " are ", common_edges)
+
                 // console.log("BEFORE :" , min_X, min_Y, max_X, max_Y)
 
                 curr_x = positions[node_id_list[j]].x;
                 curr_y = positions[node_id_list[j]].y;
 
+                if( min_X == null || min_Y == null || max_X == null || max_Y == null){
+                    min_X = curr_x - NODE_SIZE
+                    min_Y = curr_y - NODE_SIZE
+                    max_X = curr_x + NODE_SIZE
+                    max_Y = curr_y + NODE_SIZE
+                }
+
                 // If there is some links between these nodes :
-                min_X = Math.min(min_X, curr_x)
-                min_Y = Math.min(min_Y, curr_y)
-                max_X = Math.max(max_X, curr_x)
-                max_Y = Math.max(max_Y, curr_y)
+                min_X = Math.min(min_X, curr_x - NODE_SIZE)
+                min_Y = Math.min(min_Y, curr_y - NODE_SIZE)
+                max_X = Math.max(max_X, curr_x + NODE_SIZE)
+                max_Y = Math.max(max_Y, curr_y + NODE_SIZE)
 
                // console.log("AFTER :" , min_X, min_Y, max_X, max_Y)
 
@@ -131,7 +142,7 @@ function get_list_boxes(){
 
         // We store the request
         list_coords.push(tmp_obj)
-
+        console.log("List of coordinates : ", list_coords)
         return list_coords
 
     }
@@ -143,15 +154,15 @@ function draw_list_boxes(ctx, list_boxes){
             draw_bounding_box_on_network(ctx, list_boxes[0].minX, list_boxes[0].minY, list_boxes[0].maxX, list_boxes[0].maxY)
         }
     }
-    catch {
-        console.log('error ;)')
+    catch{
+        console.log('error when drawing boxes ;) ')
     }
 }
 
 function draw_boxes(ctx){
     console.log("Stabilized : ")
     list_boxes = get_list_boxes()
-    console.log(list_boxes)
+    console.log("List boxes :" , list_boxes)
     draw_list_boxes(ctx, list_boxes)
 }
 
