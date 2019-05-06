@@ -58,6 +58,30 @@ module.exports = {
         });
 
         return json_graph
+    },
+    replace_node : function(node_to_replace){
+
+        // Get nodes list
+        curr_node_list = json_graph["nodes"]
+
+        // Replace nodes if needed
+        curr_node_list.forEach(function(node, index) {
+            if(node.id == node_to_replace.id){
+                node.shape = node_to_replace.shape
+                node.size = node_to_replace.size
+                node.image = node_to_replace.image
+                node.label = node_to_replace.label
+                node.fixed = node_to_replace.fixed
+                node.is_fixed = node_to_replace.is_fixed
+
+                // Not sure if needed, but replace back the modified node in the list
+                if (index !== -1) {
+                    items[index] = node;
+                }
+            }
+        });
+
+        return json_graph
     }
 
 };

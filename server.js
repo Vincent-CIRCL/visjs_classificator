@@ -82,8 +82,16 @@ io.on('connection', function(socket){
   console.log('A new user is connected');
 
   socket.on('ask_json', function(msg){action_lib.send_json(msg,json_graph,socket);} );
+
   socket.on('add_edge', function(msg){action_lib.add_edge(msg,json_graph,socket);} );
   socket.on('rem_edge', function(msg){action_lib.rem_edge(msg,json_graph,socket);} );
+
+  socket.on('add_node', function(msg){action_lib.add_node(msg,json_graph,socket);} );
+  socket.on('edit_node', function(msg){action_lib.edit_node(msg,json_graph,socket);} );
+
+  /* socket.on('add_anchor', function(msg){action_lib.add_anchor(msg,json_graph,socket);} );
+  socket.on('edit_anchor', function(msg){action_lib.edit_anchor(msg,json_graph,socket);} );
+  socket.on('rem_anchor', function(msg){action_lib.rem_anchor(msg,json_graph,socket);} ); */
 
 });
 

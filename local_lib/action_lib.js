@@ -50,21 +50,22 @@ module.exports = {
   },
   add_edge: function(message, json_graph, socket) {
     console.log('message : ' + message);
-    if(message.type == "add"){
+    //if(message.type == "add"){
         console.log("Added edge !")
         tmp_edge = {}
         tmp_edge.id = message.id
         tmp_edge.to = message.to
         tmp_edge.from = message.from
+        tmp_edge.hidden = message.hidden
 
-        json_graph["edges"].push(message)
+        json_graph["edges"].push(tmp_edge)
         // Everyone except sender
-        socket.broadcast.emit('add_edge', message);
-    }
+        socket.broadcast.emit('add_edge', tmp_edge);
+    //}
   },
   rem_edge : function(message, json_graph, socket) {
     console.log('message : ' + message);
-    if(message.type == "rem"){
+    //if(message.type == "rem"){
         console.log("Removed edge !")
         console.log(json_graph["edges"])
         console.log(message)
@@ -77,8 +78,70 @@ module.exports = {
         console.log(json_graph["edges"])
         // Everyone except sender
         socket.broadcast.emit('rem_edge', message);
+    //}
+  },
+  add_node : function(message, json_graph, socket) {
+    console.log('message : ' + message);
+    json_graph["nodes"].push(message)
+    socket.broadcast.emit('add_node', message);
+  },
+  edit_node : function(message, json_graph, socket) {
+    console.log('message : ' + message);
+
+    console.log("Looking for node to modify")
+    for(var i=0; i<json_graph["nodes"].length; i++){
+        if(json_graph["nodes"][i].id == message.id){
+            console.log("Node found. Replacement ...")
+            json_graph["nodes"][i] = message
+        }
     }
-  }
+
+    socket.broadcast.emit('edit_node', message);
+  },
+  /*
+  add_anchor : function(message, json_graph, socket) {
+    console.log('message : ' + message);
+    if(message.type == "add_anchor"){
+        console.log("Added anchor !")
+        tmp_node = {}
+        tmp_node.id = message.id
+        tmp_node.shape = message.shape
+        tmp_node.size = message.size
+        tmp_node.image = message.image
+        tmp_node.label = message.label
+        tmp_node.group = message.group
+        tmp_node.fixed = message.fixed
+        tmp_node.is_fixed = message.is_fixed
+        tmp_node.fixed.x = message.fixed.x
+        tmp_node.fixed.x = message.fixed.x
+
+        json_graph["nodes"].push(tmp_node)
+        // Everyone except sender
+        socket.broadcast.emit('add_anchor', tmp_node);
+    }
+  },
+  edit_anchor : function(message, json_graph, socket) {
+    console.log('message : ' + message);
+    if(message.type == "edit_anchor"){
+        console.log("Editing anchor !")
+        tmp_node = {}
+        tmp_node.id = message.id
+        tmp_node.shape = message.shape
+        tmp_node.size = message.size
+        tmp_node.image = message.image
+        tmp_node.label = message.label
+        tmp_node.fixed = message.fixed
+        tmp_node.is_fixed = message.is_fixed
+
+        // replace the node in the local server graph
+        json_graph.replace_node(tmp_node)
+
+        // Everyone except sender
+        socket.broadcast.emit('edit_anchor', tmp_node);
+    }
+  },
+  rem_anchor : function(message, json_graph, socket) {
+    console.log('message : ' + message);
+    console.log('NOT HANDLED : removing anchor');
+  } */
 };
-
-

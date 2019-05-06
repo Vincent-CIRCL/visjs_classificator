@@ -1,32 +1,46 @@
 // Graphe actions
 // ========
 
+// too complex
+// return data.edges.get().filter(function (edge) {
+//    return (edge.from === node1 && edge.to === node2 )|| (edge.from === node2 && edge.to === node1);
+//});
 
 function get_edge_between_nodes(node1,node2) {
+    /* Give the list of edge between node 1 and node 2 (directional!) */
 
+    //Get list of edges connected to
     var tmp_edge_list = network.getConnectedEdges(node1)
-    //console.log("Edge between nodes : " + node1 + " and " + node2)
-    //console.log("Edge from", node1, tmp_edge_list)
 
     var tmp_table = []
+    // Check each edge if the other side is node2
     for(i =0 ; i < tmp_edge_list.length ; i ++){
-
+        // Get the edge
         var tmp_edge = data.edges.get(tmp_edge_list[i])
-        // console.log("List edges : ", tmp_edge)
-        if(tmp_edge != null && tmp_edge.to === node2){ // Node1 already verified by construction
+
+        // Node1 already verified by construction
+        if(tmp_edge != null && tmp_edge.to === node2){
             tmp_table.push(tmp_edge)
         }
     }
 
-    //console.log("tmp_table", tmp_table)
-
     return tmp_table
+}
 
-    // too complex
-    // return data.edges.get().filter(function (edge) {
-    //    return (edge.from === node1 && edge.to === node2 )|| (edge.from === node2 && edge.to === node1);
-    //});
-};
+function get_edge_between_nodes_two_ways(node1,node2) {
+    /* Give the list of edges between node1 and node2, bidirectionnal */
+
+    // Get the edges one way
+    list_forward = get_edge_between_nodes(node1,node2)
+
+    // Get the edges reverse way
+    list_back = get_edge_between_nodes(node2, node1)
+
+    // Merge the lists
+    complete_list = list_forward.concat(list_back)
+
+    return complete_list
+}
 
 function do_complete_graph(node_list){
 
@@ -64,10 +78,5 @@ function do_cluster(evt, selected_id){
 
     // Link all node to the anchor
     link_list_to_anchor(anchor_id, selected_id)
-
-    // mark all nodes as part of the anchor group ? (Mutually exclusive ? Pb ?)
-
-    // call rectangle drawer
-    // draw_boxes(ctx)
 }
 

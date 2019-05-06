@@ -15,8 +15,16 @@ function launch_client() {
 
     // Handle events received from server (and so other users)
     socket.on('answer_json', function(message) { load_json(message) });
+
     socket.on('add_edge', function(message) { add_edge_from_server(message) });
     socket.on('rem_edge', function(message) { rem_edge_from_server(message) });
+
+    socket.on('add_node', function(message) { add_node_from_server(message) });
+    socket.on('edit_node', function(message) { edit_node_from_server(message) });
+
+    /* socket.on('add_anchor', function(message) { add_anchor_from_server(message) });
+    socket.on('edit_anchor', function(message) { edit_anchor_from_server(message) });
+    socket.on('rem_anchor', function(message) { rem_anchor_from_server(message) }); */
 
     // Ask for a new json from the input file
     request_json(socket)
@@ -78,7 +86,7 @@ function draw(){
           },
           deleteEdge: function (data, callback) { rem_edge(data, callback) },
           deleteNode: false,
-          editNode: function (data, callback) { editNode(data, cancelNodeEdit, callback) },
+          editNode: function (data, callback) { edit_node(data, cancelNodeEdit, callback) },
      },
     physics: {
         adaptiveTimestep: true,
@@ -151,49 +159,3 @@ Double CLIC (on node) = Fix position of the node
 */
 
 // Formatting : https://stackoverflow.com/questions/40096121/is-it-possible-to-format-beautify-javascript-in-pycharm
-/*
-var toggle = false;
-
-function toggle_nodes_view(){
-    data.nodes.forEach(function(nodeD) {
-        nodeD.update()
-
-    });
-
-}
-
-network.on("click", function(e) {
-  tw_id = 1205;
-  if (e.nodes[0] == tw_id) {
-    nodes.update([
-      {id: 2021, hidden: toggle},
-      {id: 2047, hidden: toggle}
-    ]);
-    edges.update([
-      {id: 'e3', hidden: toggle},
-      {id: 'e4', hidden: toggle}
-    ]);
-    network.fit();
-    // switch toggle
-    toggle = !toggle;
-
-*/
-
-  /*
-  network.on('doubleClick', function(params) {
-    nodes_distri.forEach(nodes, function(item) {
-        item.hidden = true;
-    });
-  });
-  */
-
-    /* oncontext (right click)
-  network.on('oncontext', function(obj){
-
-      var nodeId = this.getNodeAt(obj.pointer.DOM);
-      console.log(nodeId)
-
-      nodeId = obj.nodes[0];      // the node id that getNodeAt() should be returning
-      console.log(nodeId)
-  });
-    */

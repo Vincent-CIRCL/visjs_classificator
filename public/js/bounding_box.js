@@ -12,7 +12,9 @@
     }
 */
 
-NODE_SIZE = 60
+// NODE_SIZE = 60
+const MARGE_OUT = 15
+const ANCHOR_SIZE = 10
 var anchor_list = []
 
 // Color list of rectangle
@@ -30,47 +32,60 @@ color_scheme = ["rgba(151, 194, 252, 0.25)",
 
 function add_anchor_node(evt){ // data,callback
 
-    var pageX = event.pageX;    // Get the horizontal coordinate
-    var pageY = event.pageY;    // Get the vertical coordinate
-    /// console.log("New anchor position : ", pageX, pageY)
+    // NOT FOR A KEYBOARD EVENT !
+    // var pageX = evt.pageX;    // Get the horizontal coordinate
+    // var pageY = evt.pageY;    // Get the vertical coordinate
+    // console.log("New anchor position : ", pageX, pageY)
+    // console.log("Event : ", evt)
 
     tmp_anchor =
         {
             shape: "image",             // Image shape to display a small anchor
-            size:10,                    // Prevent too big pictures
+            size: ANCHOR_SIZE,          // Prevent too big pictures
             image: "anchor.png",        // Link to the anchor
             group : "anchor",           // It is an anchor and will be treated as so
             label: "anchor",            // Label of the node
-            fixed: {x: pageX, y: pageY},// Fixed position
+            fixed: {x: undefined, y: undefined}, // {x: pageX, y: pageY},// Fixed position
             is_fixed : true             // Prevent auto-move (consistent with the doubleclick behavior)
         }
 
-    console.log("Anchor node added", tmp_anchor)
 
     // Add the anchor to network, notify server and add to anchor list
-    var tmp_id = data.nodes.add([tmp_anchor])
-    new_node_notify(data.nodes.get(tmp_id))
+    var tmp_id = data.nodes.add([tmp_anchor])[0]
+    console.log("tmp_id", tmp_id)
+    tmp_anchor.id = tmp_id
+
+    // Store the anchor as an anchor
     anchor_list.push(tmp_id)
+
+    // Get back the position of the node on the network
+    curr_position = network.getPositions([tmp_id])
+    console.log("curr_position", curr_position)
+    tmp_anchor.fixed.x = curr_position[tmp_id].x
+    tmp_anchor.fixed.y = curr_position[tmp_id].y
+
+    // Notify server
+    new_node_notify(tmp_anchor)
 
     return tmp_id
 }
 
 function is_node_in_list(node_id, list){
     // Checks if a node is in the list (anchor list usually)
-
     for(var i = 0; i < list.length; i++) {
-        if(node_id == anchor_list[i][0]){
+        if(node_id == anchor_list[i]){
             return true;
         }
     }
+
     return false;
 }
 
-function link_list_to_anchor(anchor, node_list){
+function link_list_to_anchor(anchor_id, node_list){
     // Do link a list of nodes to an anchor
     // console.log("Linking", anchor, " to each of : ", node_list)
 
-    var id_to = anchor[0]
+    var id_to = anchor_id
 
     for(var i = 0; i < node_list.length; i++) {
         var id_from = node_list[i]
@@ -84,14 +99,14 @@ function link_list_to_anchor(anchor, node_list){
                     to: id_to,
                     length : 1,
                     hidden: true,
-                    type: "cat"
+                    type: "cat" // Categorization
                 }
 
-            // console.log("tmp_edge", tmp_edge)
-            var tmp_id = data.edges.add([tmp_edge])
+            // Add the created edge
+            var tmp_id = data.edges.add([tmp_edge])[0]
 
             // Notify about the adding
-            new_edge_notify(data.edges.get(tmp_id)[0])
+            new_edge_notify(data.edges.get(tmp_id))
         }
     }
 }
@@ -108,63 +123,82 @@ function draw_bounding_box_on_network(ctx, startX, startY, endX, endY, color_ind
     ctx.strokeRect(startX, startY, endX - startX, endY - startY);
     ctx.setLineDash([]);
     //ctx.fillStyle = color_scheme[color_index];
-    ctx.fillStyle = color_scheme[color_index];
+    ctx.fillStyle = color_scheme[color_index%color_scheme.length];
     //ctx.fillStyle = 'rgba(151, 194, 252, 0.25)';
     ctx.fillRect(startX, startY, endX - startX, endY - startY);
     //console.log("Rectangle drawn")
 }
 
+function get_size_node(node_id){
+    var bounding_box = network.getBoundingBox(node_id);
+    try{
+        // console.log("bounding_box",bounding_box)
+        curr_node_width = bounding_box.right - bounding_box.left
+        curr_node_height = bounding_box.bottom - bounding_box.top
+
+        return [curr_node_width, curr_node_height]
+    }catch{
+        console.log("ERROR : bounding box not defined.")
+        return [MARGE_OUT, MARGE_OUT]
+    }
+}
+
+/*
+
+                    // On first iteration, values need to be initialized
+                    if( min_X == null || min_Y == null || max_X == null || max_Y == null){
+                        min_X = curr_x - node_size[0]/2 - MARGE_OUT
+                        min_Y = curr_y - node_size[1]/2 - MARGE_OUT
+                        max_X = curr_x + node_size[0]/2 + MARGE_OUT
+                        max_Y = curr_y + node_size[1]/2 + MARGE_OUT
+                    }
+*/
 
 function get_list_boxes(){
-    list_coords = []
-    node_id_list = data.nodes.getIds()
+    var list_coords = []
+    var node_id_list = data.nodes.getIds()
     var positions = network.getPositions();
 
     // For all anchors
     for(var i = 0; i < anchor_list.length; i++) {
-        //console.log("Anchor", positions[anchor_list[i][0]])
+
         // Start with the anchor position and size
-         var min_X = positions[anchor_list[i][0]].x - NODE_SIZE
-         var min_Y = positions[anchor_list[i][0]].y - NODE_SIZE
-         var max_X = positions[anchor_list[i][0]].x + NODE_SIZE
-         var max_Y = positions[anchor_list[i][0]].y + NODE_SIZE
+        node_size = get_size_node(anchor_list[i])
+        var min_X = positions[anchor_list[i]].x - node_size[0]/2 - MARGE_OUT
+        var min_Y = positions[anchor_list[i]].y - node_size[1]/2 - MARGE_OUT
+        var max_X = positions[anchor_list[i]].x + node_size[0]/2 + MARGE_OUT
+        var max_Y = positions[anchor_list[i]].y + node_size[1]/2 + MARGE_OUT
 
         // For all nodes that could be links to the anchor
         for(var j = 0; j < node_id_list.length; j++) {
-            //console.log("CHECK : ", nodes_distri._data[j].id, anchor_list[i][0])
-            common_edges = get_edge_between_nodes( node_id_list[j], anchor_list[i][0])
 
-            // If the current node is link to the anchor
-            if(common_edges.length !== 0 && anchor_list[i][0] !== node_id_list[j]){
-                //console.log("List edges from ", anchor_list[i][0], " to ",  node_id_list[j], " are ", common_edges)
+            // If the current anchor id is not the current node id
+            if(anchor_list[i] !== node_id_list[j]){
 
-                // console.log("BEFORE :" , min_X, min_Y, max_X, max_Y)
+                // Get the list of edges between current anchor and current node
+                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i])
 
-                curr_x = positions[node_id_list[j]].x;
-                curr_y = positions[node_id_list[j]].y;
+                // If the current node is link to the anchor
+                if(common_edges.length !== 0){
+                    // Get the Node position
+                    curr_x = positions[node_id_list[j]].x;
+                    curr_y = positions[node_id_list[j]].y;
 
-                // On first iteration, values need to be initialized
-                if( min_X == null || min_Y == null || max_X == null || max_Y == null){
-                    min_X = curr_x - NODE_SIZE
-                    min_Y = curr_y - NODE_SIZE
-                    max_X = curr_x + NODE_SIZE
-                    max_Y = curr_y + NODE_SIZE
+                    // Get size of the current node, to compute margins
+                    node_size = get_size_node(node_id_list[j])
+
+                    // If there is some links between these nodes, extend rectangle to this square
+                    min_X = Math.min(min_X, curr_x - node_size[0]/2 - MARGE_OUT)
+                    min_Y = Math.min(min_Y, curr_y - node_size[1]/2 - MARGE_OUT)
+                    max_X = Math.max(max_X, curr_x + node_size[0]/2 + MARGE_OUT)
+                    max_Y = Math.max(max_Y, curr_y + node_size[1]/2 + MARGE_OUT)
                 }
-
-                // If there is some links between these nodes, extend rectangle to this square
-                min_X = Math.min(min_X, curr_x - NODE_SIZE)
-                min_Y = Math.min(min_Y, curr_y - NODE_SIZE)
-                max_X = Math.max(max_X, curr_x + NODE_SIZE)
-                max_Y = Math.max(max_Y, curr_y + NODE_SIZE)
-
-               // console.log("AFTER :" , min_X, min_Y, max_X, max_Y)
-
             }
         }
 
         // We construct a request for the rectangle drawer
         tmp_obj = {
-                    anchor : anchor_list[i][0],
+                    anchor : anchor_list[i],
                     minX : min_X,
                     minY : min_Y,
                     maxX : max_X,
@@ -176,7 +210,6 @@ function get_list_boxes(){
 
     }
 
-    //console.log("List of coordinates : ", list_coords)
     return list_coords
 }
 
@@ -188,14 +221,14 @@ function draw_list_boxes(ctx, list_boxes){
         }
     }
     catch{
-        console.err('Error when drawing boxes ;) ')
+        console.log('Error when drawing boxes ;) ')
     }
 }
 
 function draw_boxes(ctx){
     //console.log("Stabilized : ")
     list_boxes = get_list_boxes()
-    //console.log("List boxes :" , list_boxes)
+    // console.log("List boxes :" , list_boxes)
     draw_list_boxes(ctx, list_boxes)
 }
 
@@ -206,98 +239,3 @@ function make_rectangle_with_anchors(container, network, nodes) {
     network.on('beforeDrawing', function (ctx) { draw_boxes(ctx) });
     //network.once('stabilizationIterationsDone', function (ctx) { draw_boxes(ctx) });
 }
-
-
-/*
-const NO_CLICK = 0;
-const RIGHT_CLICK = 3;
-
-// Selector
-function canvasify(DOMx, DOMy) {
-    const { x, y } = network.DOMtoCanvas({ x: DOMx, y: DOMy });
-    return [x, y];
-}
-
-function correctRange(start, end){
-    return start < end ? [start, end] : [end, start];
-}
-
-function selectFromDOMRect(){
-    const [sX, sY] = canvasify(DOMRect.startX, DOMRect.startY);
-    const [eX, eY] = canvasify(DOMRect.endX, DOMRect.endY);
-    const [startX, endX] = correctRange(sX, eX);
-    const [startY, endY] = correctRange(sY, eY);
-
-    network.selectNodes(nodes_distri.get().reduce(
-        (selected, { id }) => {
-            const { x, y } = network.getPositions(id)[id];
-            return (startX <= x && x <= endX && startY <= y && y <= endY) ? selected.concat(id) : selected;
-            //And nodes.get(id).hidden ? Depending on the behavior expected
-        }, []
-    ));
-}
-
-function rectangle_mousedown(evt){
-    // Handle mouse down event = beginning of the rectangle selection
-
-    var pageX = event.pageX;    // Get the horizontal coordinate
-    var pageY = event.pageY;    // Get the vertical coordinate
-    var which = event.which;    // Get the button type
-
-    // When mousedown, save the initial rectangle state
-    if(which === RIGHT_CLICK) {
-        Object.assign(DOMRect, {
-            startX: pageX - container.offsetLeft,
-            startY: pageY - container.offsetTop,
-            endX: pageX - container.offsetLeft,
-            endY: pageY - container.offsetTop
-        });
-        drag = true;
-    }
-}
-
-function rectangle_mousedrag(evt){
-    // Handle mouse drag event = during the rectangle selection
-    var pageX = event.pageX;    // Get the horizontal coordinate
-    var pageY = event.pageY;    // Get the vertical coordinate
-    var which = event.which;    // Get the button type
-
-    if(which === NO_CLICK && drag) {
-        // Make selection rectangle disappear when accidently mouseupped outside 'container'
-        drag = false;
-        network.redraw();
-    } else if(drag) {
-        // When mousemove, update the rectangle state
-        Object.assign(DOMRect, {
-            endX: pageX - container.offsetLeft,
-            endY: pageY - container.offsetTop
-        });
-        network.redraw();
-    }
-}
-
-function rectangle_mouseup(evt){
-    // Handle mouse up event = beginning of the rectangle selection
-
-    var pageX = event.pageX;    // Get the horizontal coordinate
-    var pageY = event.pageY;    // Get the vertical coordinate
-    var which = event.which;    // Get the button type
-
-    // When mouseup, select the nodes in the rectangle
-    if(which === RIGHT_CLICK) {
-        drag = false;
-        network.redraw();
-        selectFromDOMRect();
-    }
-}
-
-// State
-var boxes_list = [];
-
-function create_new_box(container, network, nodes) {
-
-    // Drawer
-    network.on('afterDrawing', function (ctx) { draw_rectangle_on_network(ctx) });
-}
-
-*/

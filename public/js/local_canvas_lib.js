@@ -77,7 +77,7 @@ function edit_node(data, callback){
 }
 */
 
-function editNode(data, cancelAction, callback) {
+function edit_node(data, cancelAction, callback) {
       //console.log('edit', data);
 
       // Break if the node is not an anchor
@@ -100,7 +100,7 @@ function editNode(data, cancelAction, callback) {
 function saveNodeData(data, callback) {
       data.label = document.getElementById('node-label').value;
       // Send update to server
-      edit_anchor_notify(data)
+      edit_node_notify(data)
       clearNodePopUp();
       callback(data);
 }
