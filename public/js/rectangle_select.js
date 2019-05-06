@@ -89,7 +89,7 @@ function draw_rectangle_on_network(ctx){
         const [startX, startY] = canvasify(DOMRect.startX, DOMRect.startY);
         const [endX, endY] = canvasify(DOMRect.endX, DOMRect.endY);
 
-        console.log("SELECTION RECT ! ", startX, startY, endX, endY, ctx)
+        // console.log("SELECTION RECT ! ", startX, startY, endX, endY, ctx)
 
         ctx.setLineDash([5]);
         ctx.strokeStyle = 'rgba(78, 146, 237, 0.75)';

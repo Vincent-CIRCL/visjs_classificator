@@ -78,7 +78,7 @@ function draw(){
           },
           deleteEdge: function (data, callback) { rem_edge(data, callback) },
           deleteNode: false,
-          //editNode: false
+          editNode: function (data, callback) { editNode(data, cancelNodeEdit, callback) },
      },
     physics: {
         adaptiveTimestep: true,

@@ -131,3 +131,20 @@ div.outerBorder {
   overflow: hidden;
   background-color: #f1f1f1;
 }
+
+
+    #node-popUp {
+      display:none;
+      position:absolute;
+      top:350px;
+      left:170px;
+      z-index:299;
+      width:250px;
+      height:120px;
+      background-color: #f9f9f9;
+      border-style:solid;
+      border-width:3px;
+      border-color: #5394ed;
+      padding:10px;
+      text-align: center;
+    }

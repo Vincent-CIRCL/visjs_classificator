@@ -70,11 +70,53 @@ function add_node(data, callback){
     console.log('add', data);
 }
 
-
+/*
 function edit_node(data, callback){
     // filling in the popup DOM elements
     console.log('edit', data);
 }
+*/
+
+function editNode(data, cancelAction, callback) {
+      //console.log('edit', data);
+
+      // Break if the node is not an anchor
+      if(!is_node_in_list(data.id, anchor_list)){
+        console.log("Not-anchor nodes can't be edited.");
+        cancelNodeEdit(callback)
+        return
+      }
+
+      // Set displayed data
+      document.getElementById('node-operation').innerHTML = "Edit Node";
+      document.getElementById('node-image').value = data.image;
+      document.getElementById('node-label').value = data.label;
+      // Set button functions
+      document.getElementById('node-saveButton').onclick = saveNodeData.bind(this, data, callback);
+      document.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
+      document.getElementById('node-popUp').style.display = 'block';
+}
+
+function saveNodeData(data, callback) {
+      data.label = document.getElementById('node-label').value;
+      // Send update to server
+      edit_anchor_notify(data)
+      clearNodePopUp();
+      callback(data);
+}
+
+function cancelNodeEdit(callback) {
+      clearNodePopUp();
+      callback(null);
+}
+
+// Callback passed as parameter is ignored
+function clearNodePopUp() {
+      document.getElementById('node-saveButton').onclick = null;
+      document.getElementById('node-cancelButton').onclick = null;
+      document.getElementById('node-popUp').style.display = 'none';
+}
+
 function rem_node(data, callback){
     // filling in the popup DOM elements
     console.log('rem', data);
