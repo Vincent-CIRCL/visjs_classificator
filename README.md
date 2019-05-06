@@ -41,13 +41,12 @@ With selection of nodes, press "c" to generate an anchor. If you link a picture 
 Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
 
 ### Todo list 
-- Rectangle selection : Clic + CTRL Done, rectangle would still need to be done. See following picture on the idea on how-to-do : 
-![explanations](./doc/pictures/schema.jpg)
+- Rectangle selection : Clic + CTRL Done, rectangle would still need to be done : Done
 - When double clic and moved, the node stays where it is (fixed property isk kept on dragging) : Done
 - Simple and double arrows support
 - Order on a grid (See Mokkadev repository)
-- Selection rectangle
-- Increase link size
+- Selection rectangle : Done
+- Increase link size : Done
 - Show one or many links between pictures
 
 Good links to get started if you're lost : 
