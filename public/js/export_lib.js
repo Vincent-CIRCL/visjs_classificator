@@ -21,6 +21,13 @@ function graph_to_JSON() {
             tmp_node.shape = nodeD.shape
             tmp_node.image = nodeD.image
 
+            if (nodeD.group !== null){
+                tmp_node.group = nodeD.group
+            }
+            if (nodeD.label !== null){
+                tmp_node.label = nodeD.label
+            }
+
             // Store the node in the list to be exported
 			nodeData.push(tmp_node);
 			});
@@ -31,6 +38,11 @@ function graph_to_JSON() {
             // Add attributes of a node to the new list
             tmp_edge.to = edge.to
             tmp_edge.from = edge.from
+
+            //TODO : Implement type = manual, algoX, algoY, ...
+            if (edge.type !== null){
+                tmp_node.type = edge.type
+            }
 
             // Store the node in the list to be exported
 			edgeData.push(tmp_edge);
