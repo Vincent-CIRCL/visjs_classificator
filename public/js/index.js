@@ -78,15 +78,17 @@ function draw(){
     manipulation: {
           // http://visjs.org/docs/data/dataset.html#Data_Manipulation
           enabled: true,
+
           addNode: function (data, callback) { add_node(data, callback) },
+          editNode: function (data, callback) { edit_node(data, cancelNodeEdit, callback) },
+          deleteNode: false,
+
           addEdge: function (data, callback) { add_edge(data, callback) },
           editEdge: {
             editWithoutDrag:
                 function(data, callback) { edit_edge(data, callback) }
           },
           deleteEdge: function (data, callback) { rem_edge(data, callback) },
-          deleteNode: false,
-          editNode: function (data, callback) { edit_node(data, cancelNodeEdit, callback) },
      },
     physics: {
         adaptiveTimestep: true,

@@ -8,6 +8,11 @@ function export_json(){
     trigger_file_download(jsonData, 'json');
 }
 
+function export_classes_json(){
+    var jsonData = classes_to_JSON();
+    trigger_file_download(jsonData, 'json');
+}
+
 // ================ UTILITIES ================
 function graph_to_JSON() {
         var nodeData = [];
@@ -58,6 +63,46 @@ function graph_to_JSON() {
 		var jsonData = JSON.stringify(to_export);
 		return jsonData;
 	}
+
+function classes_to_JSON() {
+    var classes = [];
+
+    var node_id_list = data.nodes.getIds()
+
+    for(var i = 0; i < anchor_list.length; i++) {
+        //TODO : Problem here !
+        tmp_class = {}
+        tmp_class.label = data.nodes.get(anchor_list[i]).label
+        tmp_class.member_list = []
+        counter = 0
+
+        // For all nodes that could be links to the anchor
+        for(var j = 0; j < node_id_list.length; j++) {
+
+            // If the current anchor id is not the current node id
+            if(anchor_list[i] !== node_id_list[j]){
+
+                // Get the list of edges between current anchor and current node
+                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i])
+
+                // If the current node is link to the anchor
+                if(common_edges.length !== 0){
+                        // We add the node to the class
+                        tmp_class.member_list.push(node_id_list[j])
+                        counter += 1
+                }
+            }
+        }
+        tmp_class.nb_item = counter
+        classes.push(tmp_class)
+    }
+
+    console.log("Classes sorting to export : ")
+    console.log(classes)
+
+    var jsonData = JSON.stringify(classes);
+    return jsonData;
+}
 
 function trigger_file_download(data, type) {
 	var dataUri;
