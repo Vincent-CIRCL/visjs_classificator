@@ -54,11 +54,16 @@
   <input type="button" value="cancel" id="node-cancelButton" />
  </div>
 
- <button class="collapsible" id="download_button" onclick="export_json()" value="download">Download</button>
- <button class="collapsible" id="download_button_bis" onclick="export_classes_json()" value="download">Download</button>
- <button class="collapsible" id ="options_collapse">Options</button>
-    <div class="content" id='config' ></div>
-
+ <div>
+ <table style="width:100%">
+  <tr>
+    <th><button class="collapsible" id="download_button" onclick="export_json()" value="download">Download graph</button></th>
+    <th><button class="collapsible" id="download_button_bis" onclick="export_classes_json()" value="download">Download clusters</button></th>
+    <th><button class="collapsible" id ="options_collapse">Options</button></th>
+  </tr>
+ </table>
+ </div>
+<div class="content" id='config' ></div>
 
 </body>
 </html>

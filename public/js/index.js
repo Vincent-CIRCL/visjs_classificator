@@ -70,7 +70,8 @@ function draw(){
       }
     },
     edges: {
-      color: 'lightgray'
+      color: 'lightgray',
+      smooth : false,
     },
     groups: {
       "anchor": { color: 'red', mass: 1 },// try to change this value
@@ -91,14 +92,15 @@ function draw(){
           deleteEdge: function (data, callback) { rem_edge(data, callback) },
      },
     physics: {
+        // enabled: false,
         adaptiveTimestep: true,
         stabilization: {
             enabled: true, // Show or not show during calculation on load
             iterations: 1000,
-            updateInterval: 25
+            updateInterval: 100 // 20
         },
         barnesHut: {
-            gravitationalConstant: -2000,
+            gravitationalConstant: -3000,
             springConstant: 0.01,// 0.2,
             springLength: 45 // 200
         }
@@ -107,7 +109,10 @@ function draw(){
         multiselect: true
     },
     layout: {
-        improvedLayout: false
+      //hierarchical: {
+      //  enabled: true,
+      //},
+      improvedLayout: false
     },
     configure: {
       filter: function(option, path) {
