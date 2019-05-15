@@ -1,10 +1,7 @@
 // JSON handler and utilities
 const fs = require('fs');
 
-// ========
-module.exports = {
-  // Utility function to convert bmp-path to png-path
-  bmp_to_png: function (nodes_list){
+  function bmp_to_png(nodes_list){
         // Loading nodes for modification (BMP..)
         nodes_list.forEach(tmp_obj => {
             file = tmp_obj["image"]
@@ -18,7 +15,11 @@ module.exports = {
             tmp_obj["image"] = file
         });
         return nodes_list
-    },
+    }
+
+// ========
+module.exports = {
+  // Utility function to convert bmp-path to png-path
     load_file : function(file_path){ // JSON load
         try {
           if (fs.existsSync(file_path)) {

@@ -17,7 +17,7 @@ const picture_lib = require('./local_lib/picture_lib');
 const utilities_lib = require('./local_lib/utilities_lib');
 
 // ====================== CONSTANTS ======================
-var target_width = 500
+var DEFAULT_TARGET_WIDTH = 500
 var first_load = true
 var json_graph;
 
@@ -29,6 +29,7 @@ commander
   .option('-j, --input-json [path]', 'Input json to display. IF none provided, json will be created.')
   .option('-i, --input-folder [path]', 'Input pictures folders - <curr_directory>/input_pictures/ by default')
   .option('-t, --tmp-folder [path]', 'Folder to output reduced size pictures - <curr_directory>/input_pictures_reduced/ by default')
+  .option('-w, --width [width]', 'Target width for reducing picture - default = 500')
   .option('-o, --output-folder [path]', 'Folder to store eventual outputs of the execution (not used for now) - <curr_directory> by default')
   .parse(process.argv);
 //See : https://github.com/tj/commander.js/
@@ -41,6 +42,7 @@ var input_folder_reduced = commander.tmpFolder ? commander.tmpFolder : 'input_pi
 var input_json = commander.inputJson ? commander.inputJson : 'graphe.json';
 var resize_pictures = commander.tmpFolder == null ? false : true
 var create_new_json = commander.inputJson == null ? false : true
+var target_width = commander.width ? parseInt(commander.width) : DEFAULT_TARGET_WIDTH
 
 // Path creation
 input_folder = path.join(__dirname, input_folder)
@@ -95,5 +97,6 @@ io.on('connection', function(socket){
 
 });
 
+console.log("Target width :", target_width)
 http.listen(3000, action_lib.reduce_and_serve(resize_pictures, target_width , input_folder, tmp_folder_reduced));
 // Socket.io cheatsheet : https://socket.io/docs/emit-cheatsheet/
