@@ -1,6 +1,6 @@
 // Action that client can perform handler
 const fs = require('fs');
-const sharp = require('sharp');
+const Jimp = require('jimp');
 const path = require('path');
 
 // ========
@@ -12,6 +12,9 @@ module.exports = {
       console.log('listening on *:3000');
       // https://sharp.dimens.io/en/stable/api-resize/
 
+
+      // We must verify that pictures are readable (= PNG)
+      // If we have to resize pictures
       if(resize_pictures){
 
           console.log("Creating tmp output folder ... ")
@@ -21,17 +24,28 @@ module.exports = {
 
           console.log('Reducing image size ... ');
           fs.readdirSync(input_folder).forEach(file => {
+                let tmp_input_path = path.join(input_folder, file)
+                let tmp_file = file.substr(0, file.lastIndexOf(".")) + ".png";
+                let tmp_output_path = path.join(tmp_folder_reduced, tmp_file)
+
                 //Resize
-                sharp(path.join(input_folder, file)).resize(target_width,null).flatten().
-                    toFile(path.join(tmp_folder_reduced, file), function(err){
-                    if(err){
-                        console.log("Error at reducing size")
+                Jimp.read(tmp_input_path)
+                    .then(image => {
+                        // Do stuff with the image.
+                        image
+                        .resize(target_width, Jimp.AUTO)
+                        .write(tmp_output_path)
+                    })
+                    .catch(err => {
+                        console.log("Error at reducing size / converting picture : ")
                         console.log(err)
-                        return;
-                    }
-                })
+                        console.log(tmp_input_path);
+                        console.log(tmp_output_path);
+                    });
+
         })
         console.log('Image reduction completed.');
+
     }
   },
   send_json: function(message, json_graph, socket) {

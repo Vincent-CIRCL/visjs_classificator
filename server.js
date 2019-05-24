@@ -54,6 +54,7 @@ input_json = path.join(__dirname, input_json)
 // Gives access to the public folder
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules', 'visjs-network', 'dist')));
+// Use the folder depending on if pictures are reduced or not
 if(resize_pictures){
     app.use(express.static(tmp_folder_reduced));
 } else {

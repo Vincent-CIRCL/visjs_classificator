@@ -23,7 +23,7 @@ module.exports = {
     load_file : function(file_path){ // JSON load
         try {
           if (fs.existsSync(file_path)) {
-            //file exists
+            // File exists
             console.log("Provided file to load : " + file_path + "\nLoading ... ")
             json_graph = JSON.parse(fs.readFileSync(file_path, 'utf8'));
 
