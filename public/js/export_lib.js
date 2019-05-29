@@ -46,14 +46,14 @@ function export_node(curr_node){
 }
 
 function is_an_anchor(id){
-    console.log("Checking id ", id)
+    //console.log("Checking id ", id)
     for(var i = 0; i < anchor_list.length; i++) {
         if(id === anchor_list[i]){
-            console.log("Found as anchor ", id)
+            //console.log("Found as anchor ", id)
             return true
         }
     }
-    console.log("Not an anchor ", id)
+    //console.log("Not an anchor ", id)
     return false
 }
 
@@ -61,7 +61,7 @@ function get_nodes(with_cluster=true){
     var nodeData = [];
 
     if(with_cluster){
-        console.log("Getting nodes, with clusters")
+        //console.log("Getting nodes, with clusters")
 
         // Add nodes with clusters (nothing special)
         data.nodes.get().forEach(function(nodeD) {
@@ -69,7 +69,7 @@ function get_nodes(with_cluster=true){
             nodeData.push(export_node(nodeD));
         });
     } else {
-        console.log("Getting nodes, without clusters")
+        //console.log("Getting nodes, without clusters")
 
         // Add nodes without clusters (jump over clusters)
         data.nodes.get().forEach(function(nodeD) {
