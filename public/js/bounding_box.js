@@ -17,6 +17,10 @@ const MARGE_OUT = 15
 const ANCHOR_SIZE = 10
 var anchor_list = []
 
+/* Anchor format :
+var anchor = {id:"cluster_id", members:["id_1","id_2",...]};
+*/
+
 // Color list of rectangle
 color_scheme = ["rgba(151, 194, 252, 0.25)",
                 "rgba(252, 208, 151, 0.25)",
@@ -55,8 +59,10 @@ function add_anchor_node(evt){ // data,callback
     console.log("tmp_id", tmp_id)
     tmp_anchor.id = tmp_id
 
+    tmp_light_anchor = {id:tmp_id, members:[]}
+
     // Store the anchor as an anchor
-    anchor_list.push(tmp_id)
+    anchor_list.push(tmp_light_anchor)
 
     // Get back the position of the node on the network
     curr_position = network.getPositions([tmp_id])
@@ -73,7 +79,7 @@ function add_anchor_node(evt){ // data,callback
 function is_node_in_list(node_id, list){
     // Checks if a node is in the list (anchor list usually)
     for(var i = 0; i < list.length; i++) {
-        if(node_id == anchor_list[i]){
+        if(node_id == anchor_list[i].id){
             return true;
         }
     }
@@ -105,10 +111,24 @@ function link_list_to_anchor(anchor_id, node_list){
             // Add the created edge
             var tmp_id = data.edges.add([tmp_edge])[0]
 
+            // Add to members of the anchor
+            add_member_to_anchor(id_to,id_from)
+
             // Notify about the adding
             new_edge_notify(data.edges.get(tmp_id))
         }
     }
+}
+
+function add_member_to_anchor(anchor_id, node_id){
+    // Do add the given node id to the members of the given anchor
+
+    let obj = anchor_list.find(f=>f.id==anchor_id);
+    if(obj){
+        obj.members.push(node_id);
+        return true
+    }
+    return false
 }
 
 
@@ -154,6 +174,7 @@ function get_size_node(node_id){
                     }
 */
 
+// NEW VERSION of the boxes builder. If something is linked to an anchor AND in its members list, it draws a rectangle around it.
 function get_list_boxes(){
     var list_coords = []
     var node_id_list = data.nodes.getIds()
@@ -163,20 +184,74 @@ function get_list_boxes(){
     for(var i = 0; i < anchor_list.length; i++) {
 
         // Start with the anchor position and size
-        node_size = get_size_node(anchor_list[i])
-        var min_X = positions[anchor_list[i]].x - node_size[0]/2 - MARGE_OUT
-        var min_Y = positions[anchor_list[i]].y - node_size[1]/2 - MARGE_OUT
-        var max_X = positions[anchor_list[i]].x + node_size[0]/2 + MARGE_OUT
-        var max_Y = positions[anchor_list[i]].y + node_size[1]/2 + MARGE_OUT
+        node_size = get_size_node(anchor_list[i].id)
+        var min_X = positions[anchor_list[i].id].x - node_size[0]/2 - MARGE_OUT
+        var min_Y = positions[anchor_list[i].id].y - node_size[1]/2 - MARGE_OUT
+        var max_X = positions[anchor_list[i].id].x + node_size[0]/2 + MARGE_OUT
+        var max_Y = positions[anchor_list[i].id].y + node_size[1]/2 + MARGE_OUT
+
+        // For all nodes that could be links to the anchor
+        for(var j = 0; j < anchor_list[i].members.length; j++) {
+
+            // If the current anchor id is not the current node id
+            if(anchor_list[i].id !== anchor_list[i].members[j]){
+
+                // Get the Node position
+                curr_x = positions[anchor_list[i].members[j]].x;
+                curr_y = positions[anchor_list[i].members[j]].y;
+
+                // Get size of the current node, to compute margins
+                node_size = get_size_node(anchor_list[i].members[j])
+
+                // If there is some links between these nodes, extend rectangle to this square
+                min_X = Math.min(min_X, curr_x - node_size[0]/2 - MARGE_OUT)
+                min_Y = Math.min(min_Y, curr_y - node_size[1]/2 - MARGE_OUT)
+                max_X = Math.max(max_X, curr_x + node_size[0]/2 + MARGE_OUT)
+                max_Y = Math.max(max_Y, curr_y + node_size[1]/2 + MARGE_OUT)
+            }
+        }
+
+        // We construct a request for the rectangle drawer
+        tmp_obj = {
+                    anchor : anchor_list[i].id,
+                    minX : min_X,
+                    minY : min_Y,
+                    maxX : max_X,
+                    maxY : max_Y
+                  }
+
+        // We store the request
+        list_coords.push(tmp_obj)
+
+    }
+
+    return list_coords
+}
+
+// OLD VERSION of the boxes builder. If something is linked to an anchor, it draws a rectangle around it.
+function get_list_boxes_anchor_based(){
+    var list_coords = []
+    var node_id_list = data.nodes.getIds()
+    var positions = network.getPositions();
+
+    // For all anchors
+    for(var i = 0; i < anchor_list.length; i++) {
+
+        // Start with the anchor position and size
+        node_size = get_size_node(anchor_list[i].id)
+        var min_X = positions[anchor_list[i].id].x - node_size[0]/2 - MARGE_OUT
+        var min_Y = positions[anchor_list[i].id].y - node_size[1]/2 - MARGE_OUT
+        var max_X = positions[anchor_list[i].id].x + node_size[0]/2 + MARGE_OUT
+        var max_Y = positions[anchor_list[i].id].y + node_size[1]/2 + MARGE_OUT
 
         // For all nodes that could be links to the anchor
         for(var j = 0; j < node_id_list.length; j++) {
 
             // If the current anchor id is not the current node id
-            if(anchor_list[i] !== node_id_list[j]){
+            if(anchor_list[i].id !== node_id_list[j]){
 
                 // Get the list of edges between current anchor and current node
-                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i])
+                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i].id)
 
                 // If the current node is link to the anchor
                 if(common_edges.length !== 0){
@@ -198,7 +273,7 @@ function get_list_boxes(){
 
         // We construct a request for the rectangle drawer
         tmp_obj = {
-                    anchor : anchor_list[i],
+                    anchor : anchor_list[i].id,
                     minX : min_X,
                     minY : min_Y,
                     maxX : max_X,

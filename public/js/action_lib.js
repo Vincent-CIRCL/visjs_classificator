@@ -6,22 +6,24 @@ function load_json(parsed_content) {
 
         // Store it
         incoming_network = parsed_content;
+        incoming_network["nodes"] = incoming_network["nodes"].concat(incoming_network["clusters"])
 
         // Parse anchors and store their id for fast retrieval
-        add_anchors_to_global_storage(incoming_network["nodes"])
+        add_anchors_to_global_storage(incoming_network["clusters"])
 
         console.log("Anchor list received : ", anchor_list)
 
         draw();
 }
 
-function add_anchors_to_global_storage(list_nodes){
-    for( var i = 0; i< list_nodes.length; i++){
+function add_anchors_to_global_storage(cluster_list){
+    for( var i = 0; i< cluster_list.length; i++){
 
-        if(list_nodes[i].group == "anchor"){
-            console.log("Anchor node to be in global storage ... ")
-            anchor_list.push(list_nodes[i].id);
-        }
+        //if(list_nodes[i].group == "anchor"){
+        console.log("Anchor node added in global storage ... ")
+        tmp_light_anchor = {id:cluster_list[i].id, members:cluster_list[i].members}
+        anchor_list.push(tmp_light_anchor);
+        //}
     }
 }
 

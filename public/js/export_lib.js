@@ -48,7 +48,7 @@ function export_node(curr_node){
 function is_an_anchor(id){
     //console.log("Checking id ", id)
     for(var i = 0; i < anchor_list.length; i++) {
-        if(id === anchor_list[i]){
+        if(id === anchor_list[i].id){
             //console.log("Found as anchor ", id)
             return true
         }
@@ -130,7 +130,7 @@ function get_clusters(){
     // ==== for all anchors ====
     for(var i = 0; i < anchor_list.length; i++) {
         // Get the anchor
-        curr_anchor = data.nodes.get(anchor_list[i])
+        curr_anchor = data.nodes.get(anchor_list[i].id)
 
         // Get the informations, like a node
         exported_anchor = export_node(curr_anchor)
@@ -140,9 +140,9 @@ function get_clusters(){
         for(var j = 0; j < node_id_list.length; j++) {
 
             // If the current anchor id is not the current node id (no link from anchor to itself)
-            if(anchor_list[i] !== node_id_list[j]){
+            if(anchor_list[i].id !== node_id_list[j]){
                 // Get the list of edges between current anchor and current node
-                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i])
+                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i].id)
 
                 // If the current node is linked to the anchor
                 if(common_edges.length !== 0){
@@ -230,7 +230,7 @@ function classes_to_JSON() {
         //TODO : Problem here !
         // get the anchor information (label ..)
         tmp_class = {}
-        tmp_class.label = data.nodes.get(anchor_list[i]).label
+        tmp_class.label = data.nodes.get(anchor_list[i].id).label
         tmp_class.members = []
         counter = 0
 
@@ -238,10 +238,10 @@ function classes_to_JSON() {
         for(var j = 0; j < node_id_list.length; j++) {
 
             // If the current anchor id is not the current node id
-            if(anchor_list[i] !== node_id_list[j]){
+            if(anchor_list[i].id !== node_id_list[j]){
 
                 // Get the list of edges between current anchor and current node
-                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i])
+                common_edges = get_edge_between_nodes_two_ways(node_id_list[j], anchor_list[i].id)
 
                 // If the current node is link to the anchor
                 if(common_edges.length !== 0){

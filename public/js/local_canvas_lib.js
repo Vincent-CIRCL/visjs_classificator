@@ -47,6 +47,9 @@ function add_edge(data, callback){
         callback(null);
         return;
     }
+
+    add_member_to_anchor(data.from, data.to)
+    add_member_to_anchor(data.to, data.from)
     callback(data)
 
     // after each adding you will be back to addEdge mode
