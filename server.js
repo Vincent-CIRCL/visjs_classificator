@@ -14,7 +14,7 @@ const path = require('path');
 const action_lib = require('./local_lib/action_lib');
 const json_lib = require('./local_lib/json_lib');
 const picture_lib = require('./local_lib/picture_lib');
-const utilities_lib = require('./local_lib/utilities_lib');
+// const utilities_lib = require('./local_lib/utilities_lib');
 
 // ====================== CONSTANTS ======================
 var DEFAULT_TARGET_WIDTH = 500

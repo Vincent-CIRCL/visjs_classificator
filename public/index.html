@@ -24,6 +24,7 @@
   <script src='./js/rectangle_select.js' type='text/javascript'></script>
   <script src='./js/css_helper.js' type='text/javascript'></script>
   <script src='./js/bounding_box.js' type='text/javascript'></script>
+  <script src='./js/highperf.js' type='text/javascript'></script>
 
 
 </head>
@@ -57,11 +58,11 @@
  <div>
  <table style="width:100%">
   <tr>
-    <th><button class="collapsible" id="download_button" onclick="export_json()" value="download">Download graph</button></th>
-    <th><button class="collapsible" id="download_button_bis" onclick="export_classes_json()" value="download">Download clusters</button></th>
+    <!-- <th><button class="collapsible" id="download_button" onclick="export_json()" value="download">Download graph</button></th> -->
+    <!-- <th><button class="collapsible" id="download_button_bis" onclick="export_classes_json()" value="download">Download clusters</button></th> -->
     <th><button class="collapsible" id="download_button_ter" onclick="export_good_graphe()" value="download ">Download normalized</button></th>
     <th><button class="collapsible" id ="options_collapse">Options</button></th>
-  </tr>
+    <th><button class="collapsible" id="highperf_toggle" onclick="toggle_highperf(this);">HighPerf</button></tr>
  </table>
  </div>
 <div class="content" id='config' ></div>

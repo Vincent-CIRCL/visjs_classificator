@@ -42,8 +42,10 @@ module.exports = {
     create_new_json :function(input_folder){ // JSON creation
         //Construct a basic object
         var json_graph = {}
+        json_graph["meta"] = []
         json_graph["nodes"] = []
         json_graph["edges"] = []
+        json_graph["clusters"] = []
 
         //Read directory and add each file as a node
         id = 0

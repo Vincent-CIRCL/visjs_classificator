@@ -104,7 +104,7 @@ function link_list_to_anchor(anchor_id, node_list){
                     from: id_from,
                     to: id_to,
                     length : 1,
-                    hidden: true,
+                    //hidden: true,
                     type: "cat" // Categorization
                 }
 
@@ -302,9 +302,11 @@ function draw_list_boxes(ctx, list_boxes){
 
 function draw_boxes(ctx){
     //console.log("Stabilized : ")
-    list_boxes = get_list_boxes()
-    // console.log("List boxes :" , list_boxes)
-    draw_list_boxes(ctx, list_boxes)
+    if(highPerf === false) {
+        list_boxes = get_list_boxes()
+        // console.log("List boxes :" , list_boxes)
+        draw_list_boxes(ctx, list_boxes)
+        }
 }
 
 
