@@ -10,3 +10,25 @@ function event_collapse_listener(element){
           element.style.display = "block";
         }
 }
+
+function filter_edges(){
+        var edgeData = [];
+        var threshold = document.getElementById("step_filter").value;
+
+        console.log("Filtering edges ... ", threshold)
+
+        // Threshold each edge
+        data.edges.get().forEach(function(edge) {
+            if(edge.value <= threshold){
+                edge.hidden = false
+                edge.physics = true
+            } else {
+                edge.hidden = true
+                edge.physics = false
+            }
+            edgeData.push(edge)
+		});
+
+		data.edges.update(edgeData)
+
+}

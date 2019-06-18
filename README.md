@@ -37,6 +37,9 @@ Right-clic + drag to draw a selection rectangle
 With selection of nodes, press "c" to generate an anchor. If you link a picture to an anchor, you add this node to the cluster.
 ![anchor](./doc/pictures/colored_clusters.gif)
 
+Interactive thresholding
+[![Interactive thresholding](http://img.youtube.com/vi/3HOV26dIOLM/0.jpg)](http://www.youtube.com/watch?v=3HOV26dIOLM)
+
 ### Performance
 Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
 
