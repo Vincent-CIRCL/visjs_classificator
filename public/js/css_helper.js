@@ -19,7 +19,9 @@ function filter_edges(){
 
         // Threshold each edge
         data.edges.get().forEach(function(edge) {
-            if(edge.value <= threshold){
+            if(typeof edge.value === "undefined" ) {
+                //Do nothing : not set, we don't touch
+            } else if(edge.value <= threshold){
                 edge.hidden = false
                 edge.physics = true
             } else {
