@@ -38,7 +38,7 @@ With selection of nodes, press "c" to generate an anchor. If you link a picture 
 ![anchor](./doc/pictures/colored_clusters.gif)
 
 Interactive thresholding
-[![Interactive thresholding](h./doc/pictures/threshold.gif)](http://www.youtube.com/watch?v=3HOV26dIOLM)
+![Interactive thresholding](h./doc/pictures/threshold.gif)
 
 ### Performance
 Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
