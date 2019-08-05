@@ -23,19 +23,19 @@ if you have nodemon or want to develop the tool :
 
 ### Interaction and usage
 CTRL + clic to select more than one node at a time.
-![Multiselection](./doc/pictures/multiselect.gif)
+![Multiselection](./doc/pictures/vid2.gif)
 
 After a selection of multiple node, press "M" to create a complete graphe.
-![CompleteGraphe](./doc/pictures/completegraphe.gif)
+![CompleteGraphe](./doc/pictures/vid3.gif)
 
 Double-clic on a node to make it "fixed" on the screen (your screen only). Perform again to un-fix a node.
-![fixednode](./doc/pictures/fixednode.gif)
+![fixednode](./doc/pictures/vid4.gif)
 
 Right-clic + drag to draw a selection rectangle
-![selectionRectangle](./doc/pictures/selection_rectangle.gif)
+![selectionRectangle](./doc/pictures/vid5.gif)
 
 With selection of nodes, press "c" to generate an anchor. If you link a picture to an anchor, you add this node to the cluster.
-![anchor](./doc/pictures/colored_clusters.gif)
+![anchor](./doc/pictures/vid6.gif)
 
 Interactive thresholding
 ![Interactive thresholding](./doc/pictures/threshold.gif)
