@@ -37,7 +37,7 @@ Right-clic + drag to draw a selection rectangle
 With selection of nodes, press "c" to generate an anchor. If you link a picture to an anchor, you add this node to the cluster.
 ![anchor](./doc/pictures/vid6.gif)
 
-Interactive thresholding
+Interactive thresholding        
 ![Interactive thresholding](./doc/pictures/threshold.gif)
 
 ### Performance
