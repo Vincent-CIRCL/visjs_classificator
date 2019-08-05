@@ -4,7 +4,7 @@ Classificator for pictures matching and clustering. Fast and visual.
 Uses VISjs and Socket.io to allow image classification/pairing, by hand, with multiuser.
 
 Note : GIF performance is not representative of real time performance.
-![Overview](./doc/pictures/overview.gif)
+![Overview](./doc/pictures/vid1.gif)
 
 
 ### Launch
