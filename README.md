@@ -41,7 +41,7 @@ Interactive thresholding
 ![Interactive thresholding](./doc/pictures/threshold.gif)
 
 ### Performance
-Tested up to 1500 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
+Tested up to 5000 pictures at the same time. May still have some tricks to perform to go higher. Depends of your configuration.
 
 ### Todo list 
 - Rectangle selection : Clic + CTRL Done, rectangle would still need to be done : Done
