@@ -22,7 +22,7 @@
     "express": "^4.16.4",
     "jimp": "^0.6.4",
     "sharp": "^0.21.3",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "vis-network": "^5.1.1"
   }
 }
